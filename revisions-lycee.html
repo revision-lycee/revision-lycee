@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Révisions Seconde Complète - Toutes Matières</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1300px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+        header h1 { font-size: 2.8em; margin-bottom: 10px; }
+        header p { font-size: 1.3em; opacity: 0.9; }
+        .tabs { display: flex; background: #f8f9fa; overflow-x: auto; border-bottom: 2px solid #e0e0e0; }
+        .tab { padding: 15px 20px; cursor: pointer; border: none; background: transparent; font-size: 0.95em; font-weight: 600; color: #666; transition: all 0.3s; white-space: nowrap; }
+        .tab:hover { background: rgba(102, 126, 234, 0.1); }
+        .tab.active { background: white; color: #667eea; border-bottom: 3px solid #667eea; }
+        .content { padding: 25px; }
+        .subject-content { display: none; }
+        .subject-content.active { display: block; }
+        .section { margin-bottom: 30px; }
+        .section h2 { color: #667eea; margin-bottom: 20px; font-size: 1.8em; border-left: 5px solid #667eea; padding-left: 15px; }
+        .chat-container { background: #f8f9fa; border-radius: 15px; padding: 20px; margin-bottom: 25px; }
+        .chat-messages { height: 350px; overflow-y: auto; margin-bottom: 15px; padding: 15px; background: white; border-radius: 10px; }
+        .message { margin-bottom: 15px; padding: 12px; border-radius: 10px; max-width: 85%; }
+        .message.user { background: #667eea; color: white; margin-left: auto; }
+        .message.ai { background: #e9ecef; color: #333; }
+        .chat-input-container { display: flex; gap: 10px; }
+        .chat-input { flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1em; }
+        .btn { padding: 12px 25px; background: #667eea; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s; }
+        .btn:hover { background: #5568d3; transform: translateY(-2px); }
+        .programme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .chapitre { background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #667eea; }
+        .chapitre h3 { color: #667eea; margin-bottom: 10px; font-size: 1.2em; }
+        .chapitre ul { padding-left: 20px; }
+        .chapitre li { margin: 8px 0; line-height: 1.5; }
+        .formule { background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 10px 0; font-family: monospace; }
+        .quiz-question { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .quiz-options { margin-top: 15px; }
+        .quiz-option { display: block; padding: 12px; margin: 8px 0; background: white; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .quiz-option:hover { border-color: #667eea; background: rgba(102, 126, 234, 0.1); }
+        .quiz-option.correct { border-color: #28a745; background: rgba(40, 167, 69, 0.1); }
+        .quiz-option.incorrect { border-color: #dc3545; background: rgba(220, 53, 69, 0.1); }
+        .loading { display: none; text-align: center; padding: 10px; color: #667eea; }
+        .keywords { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; }
+        .keyword { background: #e3f2fd; padding: 8px 15px; border-radius: 20px; font-size: 0.9em; cursor: pointer; }
+        .keyword:hover { background: #bbdefb; }
+        @media (max-width: 768px) { 
+            header h1 { font-size: 2em; } 
+            .tabs { flex-wrap: wrap; } 
+            .tab { flex: 1; min-width: 120px; padding: 12px 15px; } 
+            .programme-grid { grid-template-columns: 1fr; } 
+            .chat-messages { height: 300px; } 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 RÉVISIONS SECONDE COMPLÈTE</h1>
+            <p>Toutes les matières • Tout le programme • Assistant IA</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" data-subject="maths">📐 Maths</button>
+            <button class="tab" data-subject="francais">📚 Français</button>
+            <button class="tab" data-subject="physique">⚡ Physique-Chimie</button>
+            <button class="tab" data-subject="svt">🧬 SVT</button>
+            <button class="tab" data-subject="histoire">🌍 Histoire-Géo</button>
+            <button class="tab" data-subject="anglais">🇬🇧 Anglais</button>
+            <button class="tab" data-subject="ses">💰 SES</button>
+            <button class="tab" data-subject="sn">💻 Sciences Num</button>
+        </div>
+
+        <div class="content">
+            
+            <!-- MATHS - PROGRAMME COMPLET -->
+            <div class="subject-content active" id="maths">
+                <div class="section">
+                    <h2>💬 Assistant Maths - Programme de Seconde</h2>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-maths">
+                            <div class="message ai">📐 Assistant Maths Seconde : Nombres • Fonctions • Géométrie • Stats • Probas. Pose ta question !</div>
+                        </div>
+                        <div class="loading" id="loading-maths">⏳ Réflexion...</div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="input-maths" placeholder="Ex: résoudre équation, fonction affine, théorème Pythagore...">
+                            <button class="btn" onclick="sendMessage('maths')">Envoyer</button>
+                        </div>
+                        <div class="keywords">
+                            <div class="keyword" onclick="document.getElementById('input-maths').value='fonction affine';sendMessage('maths')">Fonction affine</div>
+                            <div class="keyword" onclick="document.getElementById('input-maths').value='équation second degré';sendMessage('maths')">Équation 2nd degré</div>
+                            <div class="keyword" onclick="document.getElementById('input-maths').value='théorème Pythagore';sendMessage('maths')">Pythagore</div>
+                            <div class="keyword" onclick="document.getElementById('input-maths').value='vecteurs';sendMessage('maths')">Vecteurs</div>
+                            <div class="keyword" onclick="document.getElementById('input-maths').value='statistiques';sendMessage('maths')">Statistiques</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>📚 Programme Complet de Maths Seconde</h2>
+                    <div class="programme-grid">
+                        <div class="chapitre">
+                            <h3>1. Nombres et calculs</h3>
+                            <ul>
+                                <li>Ensembles de nombres (ℕ, ℤ, ℚ, ℝ)</li>
+                                <li>Calcul algébrique</li>
+                                <li>Puissances et racines carrées</li>
+                                <li>Notation scientifique</li>
+                                <li>Intervalles et inéquations</li>
+                            </ul>
+                            <div class="formule">√(a×b) = √a × √b</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>2. Fonctions</h3>
+                            <ul>
+                                <li>Fonctions affines: f(x) = ax + b</li>
+                                <li>Fonctions carré: f(x) = x²</li>
+                                <li>Fonctions polynômes du 2nd degré</li>
+                                <li>Fonction inverse: f(x) = 1/x</li>
+                                <li>Fonction racine carrée: f(x) = √x</li>
+                                <li>Variations, maximum, minimum</li>
+                            </ul>
+                            <div class="formule">f(x) = ax² + bx + c</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>3. Géométrie</h3>
+                            <ul>
+                                <li>Théorème de Pythagore</li>
+                                <li>Théorème de Thalès</li>
+                                <li>Trigonométrie (sin, cos, tan)</li>
+                                <li>Vecteurs et translations</li>
+                                <li>Coordonnées dans le plan</li>
+                                <li>Configurations géométriques</li>
+                            </ul>
+                            <div class="formule">a² + b² = c² (Pythagore)</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>4. Statistiques & Probabilités</h3>
+                            <ul>
+                                <li>Moyenne, médiane, étendue</li>
+                                <li>Quartiles, diagrammes</li>
+                                <li>Probabilités sur un ensemble fini</li>
+                                <li>Arbres de probabilités</li>
+                                <li>Événements indépendants</li>
+                                <li>Loi des grands nombres</li>
+                            </ul>
+                            <div class="formule">P(A) = nb cas favorables / nb cas possibles</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>✅ Quiz Maths</h2>
+                    <div class="quiz-question">
+                        <p><strong>Une fonction affine s'écrit :</strong></p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q-m1" value="a"> f(x) = ax² + bx + c</label>
+                            <label class="quiz-option"><input type="radio" name="q-m1" value="b"> f(x) = ax + b</label>
+                            <label class="quiz-option"><input type="radio" name="q-m1" value="c"> f(x) = a/x</label>
+                        </div>
+                        <button class="btn" onclick="checkAnswer('q-m1', 'b', this)">Vérifier</button>
+                    </div>
+                    
+                    <div class="quiz-question">
+                        <p><strong>Dans un triangle rectangle, le théorème de Pythagore dit :</strong></p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q-m2" value="a"> a + b = c</label>
+                            <label class="quiz-option"><input type="radio" name="q-m2" value="b"> a² + b² = c²</label>
+                            <label class="quiz-option"><input type="radio" name="q-m2" value="c"> a × b = c</label>
+                        </div>
+                        <button class="btn" onclick="checkAnswer('q-m2', 'b', this)">Vérifier</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FRANÇAIS - PROGRAMME COMPLET -->
+            <div class="subject-content" id="francais">
+                <div class="section">
+                    <h2>💬 Assistant Français - Programme de Seconde</h2>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-francais">
+                            <div class="message ai">📚 Assistant Français Seconde : Genres littéraires • Analyse • Écriture • Oral. Pose ta question !</div>
+                        </div>
+                        <div class="loading" id="loading-francais">⏳ Réflexion...</div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="input-francais" placeholder="Ex: figure de style, commentaire, dissertation...">
+                            <button class="btn" onclick="sendMessage('francais')">Envoyer</button>
+                        </div>
+                        <div class="keywords">
+                            <div class="keyword" onclick="document.getElementById('input-francais').value='figures de style';sendMessage('francais')">Figures de style</div>
+                            <div class="keyword" onclick="document.getElementById('input-francais').value='commentaire composé';sendMessage('francais')">Commentaire</div>
+                            <div class="keyword" onclick="document.getElementById('input-francais').value='dissertation';sendMessage('francais')">Dissertation</div>
+                            <div class="keyword" onclick="document.getElementById('input-francais').value='genres littéraires';sendMessage('francais')">Genres</div>
+                            <div class="keyword" onclick="document.getElementById('input-francais').value='argumentation';sendMessage('francais')">Argumentation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>📚 Programme Complet de Français Seconde</h2>
+                    <div class="programme-grid">
+                        <div class="chapitre">
+                            <h3>1. Genres littéraires</h3>
+                            <ul>
+                                <li><strong>Roman :</strong> Réaliste, autobiographique, d'apprentissage</li>
+                                <li><strong>Poésie :</strong> Formes fixes, vers libre, sonnet</li>
+                                <li><strong>Théâtre :</strong> Comédie, tragédie, dramaturgie</li>
+                                <li><strong>Argumentation :</strong> Essai, pamphlet, dialogue</li>
+                                <li>Mouvements littéraires (Lumières, Romantisme)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>2. Analyse littéraire</h3>
+                            <ul>
+                                <li><strong>Figures de style :</strong> Métaphore, comparaison, hyperbole</li>
+                                <li><strong>Champs lexicaux :</strong> Identification et analyse</li>
+                                <li><strong>Narratologie :</strong> Point de vue, temps du récit</li>
+                                <li><strong>Versification :</strong> Vers, rimes, strophes</li>
+                                <li><strong>Énonciation :</strong> Je/tu, situation d'énonciation</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>3. Méthodologie</h3>
+                            <ul>
+                                <li><strong>Commentaire :</strong> Introduction, développement, conclusion</li>
+                                <li><strong>Dissertation :</strong> Thèse/antithèse/synthèse</li>
+                                <li><strong>Écriture d'invention :</strong> Lettre, article, discours</li>
+                                <li><strong>Analyse de texte :</strong> Repérage et interprétation</li>
+                                <li><strong>Oral :</strong> Exposé, lecture expressive</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>4. Langue et grammaire</h3>
+                            <ul>
+                                <li>Classes de mots (nature)</li>
+                                <li>Fonctions grammaticales</li>
+                                <li>Conjugaison et valeurs des temps</li>
+                                <li>Subordonnées (relative, complétive, circonstancielle)</li>
+                                <li>Orthographe et vocabulaire</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHYSIQUE-CHIMIE - PROGRAMME COMPLET -->
+            <div class="subject-content" id="physique">
+                <div class="section">
+                    <h2>💬 Assistant Physique-Chimie - Programme de Seconde</h2>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-physique">
+                            <div class="message ai">⚡ Assistant Physique-Chimie Seconde : Mécanique • Ondes • Chimie • Énergie. Pose ta question !</div>
+                        </div>
+                        <div class="loading" id="loading-physique">⏳ Réflexion...</div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="input-physique" placeholder="Ex: lois de Newton, réaction chimique, énergie...">
+                            <button class="btn" onclick="sendMessage('physique')">Envoyer</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>⚡ Programme Complet de Physique-Chimie Seconde</h2>
+                    <div class="programme-grid">
+                        <div class="chapitre">
+                            <h3>1. Mécanique</h3>
+                            <ul>
+                                <li>Mouvement et référentiel</li>
+                                <li>Vitesse moyenne et instantanée</li>
+                                <li>Lois de Newton (inertie, F=ma, action/réaction)</li>
+                                <li>Poids et masse</li>
+                                <li>Énergie cinétique et potentielle</li>
+                                <li>Conservation de l'énergie</li>
+                            </ul>
+                            <div class="formule">F = m × a</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>2. Ondes et signaux</h3>
+                            <ul>
+                                <li>Ondes mécaniques (son)</li>
+                                <li>Ondes électromagnétiques (lumière)</li>
+                                <li>Fréquence, période, longueur d'onde</li>
+                                <li>Propagation rectiligne de la lumière</li>
+                                <li>Réfraction, réflexion</li>
+                                <li>Lois de Snell-Descartes</li>
+                            </ul>
+                            <div class="formule">v = λ × f</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>3. Chimie : Constitution matière</h3>
+                            <ul>
+                                <li>Atomes (protons, neutrons, électrons)</li>
+                                <li>Éléments chimiques et isotopes</li>
+                                <li>Tableau périodique</li>
+                                <li>Molecules et ions</li>
+                                <li>Transformation chimique</li>
+                                <li>Équation-bilan</li>
+                            </ul>
+                            <div class="formuel">H₂O (eau), CO₂ (dioxyde de carbone)</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>4. Chimie : Transformations</h3>
+                            <ul>
+                                <li>Réactions acide-base</li>
+                                <li>Réactions d'oxydoréduction</li>
+                                <li>Solution et concentration</li>
+                                <li>pH et échelle de pH</li>
+                                <li>Synthèse chimique</li>
+                                <li>Sécurité au laboratoire</li>
+                            </ul>
+                            <div class="formule">pH = -log[H₃O⁺]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SVT - PROGRAMME COMPLET -->
+            <div class="subject-content" id="svt">
+                <div class="section">
+                    <h2>💬 Assistant SVT - Programme de Seconde</h2>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-svt">
+                            <div class="message ai">🧬 Assistant SVT Seconde : Cellule • Génétique • Évolution • Écosystèmes. Pose ta question !</div>
+                        </div>
+                        <div class="loading" id="loading-svt">⏳ Réflexion...</div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="input-svt" placeholder="Ex: mitose, ADN, évolution, écosystème...">
+                            <button class="btn" onclick="sendMessage('svt')">Envoyer</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>🧬 Programme Complet de SVT Seconde</h2>
+                    <div class="programme-grid">
+                        <div class="chapitre">
+                            <h3>1. Cellule et métabolisme</h3>
+                            <ul>
+                                <li>Structure cellulaire (membrane, noyau, cytoplasme)</li>
+                                <li>Division cellulaire : mitose et méiose</li>
+                                <li>Photosynthèse (chlorophylle, chloroplastes)</li>
+                                <li>Respiration cellulaire (mitochondries)</li>
+                                <li>Énergie cellulaire (ATP)</li>
+                                <li>Enzymes et métabolisme</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>2. Génétique</h3>
+                            <ul>
+                                <li>Structure de l'ADN (double hélice)</li>
+                                <li>Gènes et allèles</li>
+                                <li>Chromosomes et caryotype</li>
+                                <li>Transmission des caractères</li>
+                                <li>Mutations génétiques</li>
+                                <li>Génétique mendélienne</li>
+                            </ul>
+                            <div class="formule">ADN → ARN → Protéine</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>3. Évolution</h3>
+                            <ul>
+                                <li>Théorie de l'évolution (Darwin)</li>
+                                <li>Sélection naturelle</li>
+                                <li>Fossiles et chronologie relative</li>
+                                <li>Parenté entre espèces</li>
+                                <li>Arbres phylogénétiques</li>
+                                <li>Adaptation au milieu</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>4. Écosystèmes</h3>
+                            <ul>
+                                <li>Chaines alimentaires</li>
+                                <li>Réseaux trophiques</li>
+                                <li>Cycle de la matière</li>
+                                <li>Flux d'énergie</li>
+                                <li>Biodiversité</li>
+                                <li>Impact humain sur l'environnement</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTOIRE-GÉO - PROGRAMME COMPLET -->
+            <div class="subject-content" id="histoire">
+                <div class="section">
+                    <h2>💬 Assistant Histoire-Géo - Programme de Seconde</h2>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-histoire">
+                            <div class="message ai">🌍 Assistant Histoire-Géo Seconde : Grands voyages • Révolutions • Mondialisation. Pose ta question !</div>
+                        </div>
+                        <div class="loading" id="loading-histoire">⏳ Réflexion...</div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="input-histoire" placeholder="Ex: Révolution française, mondialisation, développement...">
+                            <button class="btn" onclick="sendMessage('histoire')">Envoyer</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>🌍 Programme Complet d'Histoire-Géo Seconde</h2>
+                    <div class="programme-grid">
+                        <div class="chapitre">
+                            <h3>1. Histoire : XVe-XVIIIe siècles</h3>
+                            <ul>
+                                <li>Grandes découvertes (Christophe Colomb, Magellan)</li>
+                                <li>Renaissance et Humanisme</li>
+                                <li>Réformes protestantes</li>
+                                <li>Monarchie absolue (Louis XIV)</li>
+                                <li>Lumières (Voltaire, Rousseau)</li>
+                                <li>Révolution française (1789-1799)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>2. Histoire : XIXe siècle</h3>
+                            <ul>
+                                <li>Révolution industrielle</li>
+                                <li>Nationalismes en Europe</li>
+                                <li>Colonisation et empire colonial</li>
+                                <li>Révolutions de 1848</li>
+                                <li>Affaire Dreyfus</li>
+                                <li>IIIe République</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>3. Géographie : Développement</h3>
+                            <ul>
+                                <li>Développement durable</li>
+                                <li>Inégalités Nord/Sud</li>
+                                <li>Ressources naturelles (eau, énergie)</li>
+                                <li>Risques naturels et technologiques</li>
+                                <li>Aménagement du territoire</li>
+                                <li>Mobilités humaines</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>4. Géographie : Mondialisation</h3>
+                            <ul>
+                                <li>Acteurs de la mondialisation</li>
+                                <li>Échanges commerciaux</li>
+                                <li>Métropoles mondiales</li>
+                                <li>Firmes transnationales</li>
+                                <li>Tourisme international</li>
+                                <li>Enjeux culturels</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANGLAIS - PROGRAMME COMPLET -->
+            <div class="subject-content" id="anglais">
+                <div class="section">
+                    <h2>💬 Assistant Anglais - Programme de Seconde</h2>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-anglais">
+                            <div class="message ai">🇬🇧 English Assistant Grade 10: Grammar • Vocabulary • Culture • Communication. Ask your question!</div>
+                        </div>
+                        <div class="loading" id="loading-anglais">⏳ Thinking...</div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="input-anglais" placeholder="Ex: present perfect, irregular verbs, vocabulary...">
+                            <button class="btn" onclick="sendMessage('anglais')">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>🇬🇧 Complete English Program Grade 10</h2>
+                    <div class="programme-grid">
+                        <div class="chapitre">
+                            <h3>1. Grammar & Tenses</h3>
+                            <ul>
+                                <li><strong>Present :</strong> Simple, Continuous, Perfect</li>
+                                <li><strong>Past :</strong> Simple, Continuous, Perfect</li>
+                                <li><strong>Future :</strong> Will, Going to, Present Continuous</li>
+                                <li>Modal verbs (can, should, must, might)</li>
+                                <li>Conditionals (if clauses)</li>
+                                <li>Passive voice</li>
+                            </ul>
+                            <div class="formule">I have lived / I have been living</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>2. Vocabulary Themes</h3>
+                            <ul>
+                                <li><strong>Daily life :</strong> Family, school, hobbies</li>
+                                <li><strong>Society :</strong> Environment, technology, media</li>
+                                <li><strong>Travel :</strong> Transportation, accommodation</li>
+                                <li><strong>Culture :</strong> Art, music, literature</li>
+                                <li>Phrasal verbs and idioms</li>
+                                <li>False friends (French/English)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>3. Communication Skills</h3>
+                            <ul>
+                                <li>Giving opinions and agreeing/disagreeing</li>
+                                <li>Making suggestions and recommendations</li>
+                                <li>Narrating past events</li>
+                                <li>Describing people and places</li>
+                                <li>Comparing and contrasting</li>
+                                <li>Formal vs informal language</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>4. Culture & Civilization</h3>
+                            <ul>
+                                <li>English-speaking countries (UK, USA, Australia)</li>
+                                <li>Historical events and figures</li>
+                                <li>Contemporary issues</li>
+                                <li>Literature excerpts</li>
+                                <li>Music and cinema</li>
+                                <li>Cultural differences</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SES - PROGRAMME COMPLET -->
+            <div class="subject-content" id="ses">
+                <div class="section">
+                    <h2>💬 Assistant SES - Programme de Seconde</h2>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-ses">
+                            <div class="message ai">💰 Assistant SES Seconde : Marché • Entreprise • Social • Développement. Pose ta question !</div>
+                        </div>
+                        <div class="loading" id="loading-ses">⏳ Réflexion...</div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="input-ses" placeholder="Ex: marché, entreprise, social, développement...">
+                            <button class="btn" onclick="sendMessage('ses')">Envoyer</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>💰 Programme Complet de SES Seconde</h2>
+                    <div class="programme-grid">
+                        <div class="chapitre">
+                            <h3>1. Marchés et prix</h3>
+                            <ul>
+                                <li>Offre et demande</li>
+                                <li>Formation des prix</li>
+                                <li>Élasticité-prix</li>
+                                <li>Concurrence pure et parfaite</li>
+                                <li>Monopole et oligopole</li>
+                                <li>Marché du travail</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>2. Entreprise et production</h3>
+                            <ul>
+                                <li>Facteurs de production (travail, capital)</li>
+                                <li>Coûts de production</li>
+                                <li>Productivité</li>
+                                <li>Formes juridiques d'entreprises</li>
+                                <li>Stratégie d'entreprise</li>
+                                <li>Responsabilité sociale des entreprises</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>3. Formation et emploi</h3>
+                            <ul>
+                                <li>Capital humain</li>
+                                <li>Qualifications et compétences</li>
+                                <li>Marché du travail</li>
+                                <li>Chômage et politiques de l'emploi</li>
+                                <li>Contrats de travail</li>
+                                <li>Dialogue social</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>4. Individus et cultures</h3>
+                            <ul>
+                                <li>Socialisation</li>
+                                <li>Groupes sociaux</li>
+                                <li>Culture et transmission</li>
+                                <li>Déviance et contrôle social</li>
+                                <li>Médias et opinion publique</li>
+                                <li>Intégration et exclusion</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCIENCES NUMÉRIQUES - PROGRAMME COMPLET -->
+            <div class="subject-content" id="sn">
+                <div class="section">
+                    <h2>💬 Assistant Sciences Numériques - Programme de Seconde</h2>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-sn">
+                            <div class="message ai">💻 Assistant SN Seconde : Données • Internet • Algorithmique • Programmation. Pose ta question !</div>
+                        </div>
+                        <div class="loading" id="loading-sn">⏳ Réflexion...</div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="input-sn" placeholder="Ex: algorithmes, Python, données, internet...">
+                            <button class="btn" onclick="sendMessage('sn')">Envoyer</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>💻 Programme Complet de SN Seconde</h2>
+                    <div class="programme-grid">
+                        <div class="chapitre">
+                            <h3>1. Données et représentation</h3>
+                            <ul>
+                                <li>Données structurées (tableaux)</li>
+                                <li>Types de données (entier, réel, chaîne)</li>
+                                <li>Représentation binaire</li>
+                                <li>Encodage des caractères (ASCII, Unicode)</li>
+                                <li>Compression de données</li>
+                                <li>Base de données simples</li>
+                            </ul>
+                            <div class="formule">1 octet = 8 bits</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>2. Internet et Web</h3>
+                            <ul>
+                                <li>Architecture client-serveur</li>
+                                <li>Protocoles HTTP, HTTPS</li>
+                                <li>Adresses IP et DNS</li>
+                                <li>Moteurs de recherche</li>
+                                <li>Réseaux sociaux et données personnelles</li>
+                                <li>Cybersécurité</li>
+                            </ul>
+                            <div class="formule">URL = http://www.exemple.com</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>3. Algorithmique</h3>
+                            <ul>
+                                <li>Variables et affectations</li>
+                                <li>Structures conditionnelles (si...alors...sinon)</li>
+                                <li>Boucles (pour, tant que)</li>
+                                <li>Fonctions et procédures</li>
+                                <li>Algorithmes de tri</li>
+                                <li>Complexité algorithmique</li>
+                            </ul>
+                            <div class="formule">si condition alors instructions sinon instructions</div>
+                        </div>
+                        
+                        <div class="chapitre">
+                            <h3>4. Programmation Python</h3>
+                            <ul>
+                                <li>Syntaxe de base</li>
+                                <li>Variables et types</li>
+                                <li>Structures de contrôle</li>
+                                <li>Fonctions prédéfinies et personnelles</li>
+                                <li>Listes et dictionnaires</li>
+                                <li>Modules (math, random)</li>
+                            </ul>
+                            <div class="formule">print("Bonjour")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gestion des onglets
+        const tabs = document.querySelectorAll('.tab');
+        const contents = document.querySelectorAll('.subject-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const subject = tab.getAttribute('data-subject');
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(subject).classList.add('active');
+            });
+        });
+
+        // Base de connaissances COMPLÈTE pour chaque matière
+        const knowledgeBase = {
+            maths: {
+                "fonction affine": "f(x) = ax + b • a = coefficient directeur • b = ordonnée à l'origine • Si a>0: fonction croissante • Si a<0: fonction décroissante • Représentation graphique: droite",
+                "équation second degré": "ax² + bx + c = 0 • Δ = b² - 4ac • Si Δ>0: 2 solutions: (-b±√Δ)/2a • Si Δ=0: 1 solution: -b/2a • Si Δ<0: pas de solution réelle",
+                "théorème pythagore": "Dans un triangle rectangle: a² + b² = c² où c est l'hypoténuse • Réciproque: si a²+b²=c² alors triangle rectangle • Application: calculer une longueur manquante",
+                "vecteurs": "Vecteur AB: direction, sens, longueur • Coordonnées: (xB-xA, yB-yA) • Égalité de vecteurs: même direction, sens, longueur • Addition: u⃗ + v⃗ = (xu+xv, yu+yv)",
+                "statistiques": "Moyenne: somme des valeurs / nombre de valeurs • Médiane: valeur centrale quand ordonné • Étendue: max - min • Quartiles: Q1=25%, Q2=50% (médiane), Q3=75%",
+                "probabilités": "P(A) = nombre cas favorables / nombre cas totaux • Événements indépendants: P(A∩B)=P(A)×P(B) • Loi des grands nombres: fréquence → probabilité quand n grand",
+                "trigonométrie": "sin α = côté opposé / hypoténuse • cos α = côté adjacent / hypoténuse • tan α = côté opposé / côté adjacent • sin²α + cos²α = 1",
+                "géométrie": "Théorème de Thalès: parallèles ⇒ segments proportionnels • Aires: rectangle=L×l, triangle=(b×h)/2, cercle=πr² • Volumes: cube=a³, sphère=4/3πr³",
+                "calcul": "Priorités: parenthèses → puissances → ×÷ → +- • Puissances: aⁿ×aᵐ=aⁿ⁺ᵐ, (aⁿ)ᵐ=aⁿᵐ • Racines: √(a×b)=√a×√b, √(a/b)=√a/√b",
+                "ensemble": "ℕ: naturels (0,1,2...) • ℤ: entiers (...-2,-1,0,1,2...) • ℚ: rationnels (fractions) • ℝ: réels (tous les nombres) • Intervalle: [a;b] inclu a et b, ]a;b[ exclu"
+            },
+            francais: {
+                "figures de style": "Métaphore: comparaison sans mot • Comparaison: avec 'comme', 'tel que' • Personnification: objet avec qualités humaines • Hyperbole: exagération • Métonymie: partie pour le tout",
+                "commentaire composé": "1. Introduction: présentation texte, problématique, plan • 2. Développement: 2-3 axes avec citations • 3. Conclusion: bilan, ouverture • Méthode: repérer procédés, analyser, interpréter",
+                "dissertation": "1. Introduction: sujet, problématique, annonce plan • 2. Thèse • 3. Antithèse • 4. Synthèse • 5. Conclusion: réponse à problématique, ouverture • Important: arguments + exemples",
+                "genres littéraires": "Roman: narration longue, personnages, intrigue • Poésie: vers, strophes, rimes, images • Théâtre: dialogue, didascalies, actes, scènes • Essai: réflexion argumentée",
+                "argumentation": "Thèse: position défendue • Argument: raison justifiant thèse • Exemple: illustration concrète • Connecteurs: car, donc, cependant, en effet • Types: déductive, inductive, analogique",
+                "analyse texte": "1. Situation: auteur, œuvre, contexte • 2. Mouvement: division du texte • 3. Thèmes principaux • 4. Procédés stylistiques • 5. Effets produits sur lecteur",
+                "grammaire": "Classes: nom, verbe, adj, adv, pronom, préposition • Fonctions: sujet, COD, COI, attribut, compléments circonstanciels • Phrases: simple, complexe, subordonnées",
+                "vocabulaire": "Champ lexical: ensemble mots autour même thème • Synonyme: mot de même sens • Antonyme: mot de sens opposé • Paronyme: mot de forme proche mais sens différent",
+                "oral": "Préparation: plan, support visuel • Présentation: regard, voix, posture • Interaction: écoute, réponse questions • Évaluation: fond (contenu) + forme (expression)",
+                "littérature": "Moyen Âge: chanson de geste, roman courtois • Renaissance: Humanisme, Pléiade • XVIIe: classicisme, tragédie • XVIIIe: Lumières, philosophie • XIXe: romantisme, réalisme"
+            },
+            physique: {
+                "lois newton": "1. Inertie: objet immobile ou mouvement rectiligne uniforme sans force • 2. F=ma: force proportionnelle à accélération • 3. Action/réaction: forces égales et opposées entre 2 corps",
+                "énergie": "Énergie cinétique: Ec=½mv² • Énergie potentielle: Ep=mgh • Conservation: énergie totale constante (sans frottement) • Puissance: P=W/t (travail par unité temps)",
+                "ondes": "Longueur d'onde λ (m) • Fréquence f (Hz) • Vitesse v=λ×f • Son: onde mécanique, besoin milieu • Lumière: onde électromagnétique, vitesse=3×10⁸ m/s",
+                "lumière": "Réflexion: angle incidence = angle réflexion • Réfraction: changement direction à l'interface • Lentilles: convergentes (grossissent), divergentes (réduisent) • Couleurs: spectre visible",
+                "atome": "Noyau: protons (+) et neutrons • Électrons (-) autour • Numéro atomique Z = nb protons • Masse A = nb protons + neutrons • Élément défini par Z",
+                "réaction chimique": "Réactifs → Produits • Conservation atomes • Équation-bilan équilibrée • Types: acide-base, oxydoréduction, précipitation • Indices: état (s)=solide, (l)=liquide, (g)=gaz, (aq)=aqueux",
+                "solution": "Concentration massique: Cm=m/V (g/L) • Concentration molaire: C=n/V (mol/L) • Dissolution: soluté + solvant → solution • Solubilité: masse maximale dissoute",
+                "ph": "pH = -log[H₃O⁺] • Acide: pH<7 • Neutre: pH=7 • Basique: pH>7 • Échelle: 0-14 • indicateurs: papier pH, BBT (bleu=base, jaune=acide)",
+                "circuit": "Loi d'Ohm: U=R×I (U en volts, I en ampères, R en ohms) • Puissance: P=U×I • Association résistances: série R=R₁+R₂, parallèle 1/R=1/R₁+1/R₂",
+                "sécurité": "Pictogrammes: danger, inflammable, corrosif, toxique • EPI: lunettes, gants, blouse • Fiche toxicologique • Ventilation • Élimination déchets"
+            },
+            svt: {
+                "mitose": "Division cellulaire → 2 cellules identiques • Phases: prophase (chromosomes visibles), métaphase (alignement équateur), anaphase (séparation chromatides), télophase (2 noyaux)",
+                "adn": "Double hélice • 4 bases: A-T (2 liaisons), C-G (3 liaisons) • Gène: segment ADN codant protéine • Réplication: semi-conservative avant division",
+                "photosynthèse": "6CO₂ + 6H₂O + lumière → C₆H₁₂O₆ + 6O₂ • Chlorophylle: pigment vert captant lumière • Chloroplastes: organites réalisant photosynthèse • Produits: glucose (énergie) + oxygène",
+                "respiration": "C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + énergie (ATP) • Mitochondries: organites réalisant respiration • ATP: molécule énergétique cellulaire",
+                "génétique": "Chromosomes: ADN + protéines • Caryotype: représentation chromosomes • Allèles: versions différentes même gène • Génotype: ensemble allèles • Phénotype: caractéristiques observables",
+                "évolution": "Théorie Darwin: sélection naturelle • Variation individuelle • Survie plus aptes • Reproduction avantages • Adaptation au milieu • Fossiles: traces organismes passés",
+                "écosystème": "Producteurs (végétaux) → Consommateurs (herbivores, carnivores) → Décomposeurs • Chaîne alimentaire: transfert matière/énergie • Réseau trophique: chaînes interconnectées",
+                "biodiversité": "Diversité espèces, gènes, écosystèmes • Menaces: destruction habitats, pollution, espèces invasives, changement climatique • Protection: réserves, lois, éducation",
+                "santé": "Micro-organismes: bactéries, virus, champignons • Défenses immunitaires: barrières (peau), globules blancs, anticorps • Vaccination: préparation système immunitaire",
+                "géologie": "Roches: magmatiques (volcan), sédimentaires (dépôts), métamorphiques (transformation) • Tectonique plaques: déplacement, séismes, volcans • Cycle des roches"
+            },
+            histoire: {
+                "révolution française": "1789-1799 • Causes: crise financière, inégalités sociales • 1789: États généraux, serment du Jeu de Paume, prise Bastille (14 juillet), Déclaration droits homme • 1793: exécution Louis XVI, Terreur",
+                "grandes découvertes": "XVème siècle • Christophe Colomb (1492): Amérique • Vasco de Gama (1498): route Inde • Magellan (1519-1522): 1er tour monde • Conséquences: échanges, colonisation",
+                "renaissance": "XVe-XVIe siècles • Humanisme: valeur humaine, retour textes antiques • Arts: perspective, anatomie • Sciences: Copernic (héliocentrisme) • Imprimerie (Gutenberg 1450)",
+                "révolution industrielle": "XVIIIe-XIXe • Machines à vapeur (Watt) • Usines • Urbanisation • Conditions ouvrières difficiles • Mouvements sociaux • Capitalisme industriel",
+                "colonisation": "XIXe • Partage Afrique (conférence Berlin 1884) • Mission civilisatrice • Exploitation ressources • Résistances locales • Décolonisation après 1945",
+                "mondialisation": "Échanges accélérés • Firmes transnationales • Métropoles mondiales (New York, Tokyo, Londres) • Uniformisation culturelle • Inégalités • Défis environnementaux",
+                "développement durable": "3 piliers: économique, social, environnemental • Réchauffement climatique • Ressources limitées • Énergies renouvelables • Consommation responsable",
+                "union européenne": "1957: traité Rome (CEE) • 1992: traité Maastricht (UE) • 27 pays membres • Euro (2002) • Libre circulation • Défis: Brexit, immigration, souveraineté",
+                "guerre froide": "1947-1991 • USA (capitalisme) vs URSS (communisme) • Guerre idéologique • Course armements • Crises (Berlin, Cuba) • Détente • Chute URSS 1991",
+                "médias": "Presse, radio, télévision, internet • Rôle information, formation opinion • Désinformation • Réseaux sociaux • Éducation aux médias"
+            },
+            anglais: {
+                "present perfect": "have/has + past participle • Uses: experience (I have visited Paris), recent past (She has just left), unfinished time (We have lived here for 5 years) • Signal words: ever, never, just, already, yet, since, for",
+                "past simple": "Verb + ed (regular) or irregular forms • Uses: completed action in past (I worked yesterday), series of actions, with specific time (in 2010, last week) • Signal words: yesterday, last, ago, in 2010",
+                "future": "Will + base form: prediction, instant decision • Going to + base form: plan, intention • Present continuous: fixed arrangement (I'm meeting John tomorrow) • Shall: suggestion, offer (Shall we go?)",
+                "modal verbs": "Can: ability, permission • Could: past ability, polite request • May: possibility, permission • Might: possibility • Must: obligation, necessity • Should: advice • Would: conditional, polite request",
+                "conditionals": "Zero: If + present, present (scientific facts) • First: If + present, will + base (real future) • Second: If + past, would + base (unreal present) • Third: If + past perfect, would have + participle (unreal past)",
+                "passive": "Be + past participle • Tense shown by 'be' • Agent with 'by' if important • Uses: focus on action not agent, unknown agent, formal writing • Example: The book was written by Shakespeare",
+                "vocabulary": "Education: teacher, student, exam, homework, grade • Technology: computer, internet, smartphone, social media • Environment: pollution, recycling, climate change • Travel: airport, ticket, luggage, destination",
+                "phrasal verbs": "Verb + particle (up, down, in, out, etc.) • Look up: search information • Give up: stop trying • Turn on/off: activate/deactivate • Get up: rise from bed • Break down: stop working",
+                "writing": "Structure: introduction, body paragraphs, conclusion • Linking words: however, therefore, moreover, for example • Formal vs informal: contractions, vocabulary, sentence structure • Email: subject, greeting, closing",
+                "pronunciation": "Silent letters: know, listen, hour • Stress patterns: PHOtograph vs phoTOGraphy • Intonation: rising for questions, falling for statements • Minimal pairs: ship/sheep, live/leave"
+            },
+            ses: {
+                "marché": "Lieu rencontre offre et demande • Prix d'équilibre: où offre = demande • Concurrence: nombreux offreurs/demandeurs, prix fixé par marché • Monopole: un seul offreur, prix élevé • Oligopole: quelques offreurs",
+                "entreprise": "Objectif: profit • Facteurs production: travail (salariés), capital (machines) • Coûts: fixes (loyer), variables (matières) • Productivité: output/input • Formes: SA, SARL, auto-entrepreneur",
+                "chômage": "Personne sans emploi, disponible, cherchant travail • Taux chômage: chômeurs/population active • Types: conjoncturel (crise), structurel (inadéquation), frictionnel (transition) • Politiques: formation, aides",
+                "socialisation": "Processus apprentissage normes, valeurs société • Agents: famille, école, pairs, médias • Normes: règles sociales • Valeurs: principes partagés • Contrôle social: sanctions formelles/informelles",
+                "développement": "IDH: indice développement humain (espérance vie, éducation, revenu) • PIB/habitant • Inégalités Nord/Sud • Objectifs développement durable (ODD) 2015-2030",
+                "mondialisation": "Interdépendance croissante • Acteurs: États, firmes transnationales, ONG • Flux: marchandises, capitaux, informations, personnes • Critiques: dumping social, environnemental",
+                "état": "Fonctions régaliennes: justice, police, armée • Fonctions économiques: redistribution, régulation • Dépenses: éducation, santé, défense • Recettes: impôts, taxes • Dette publique",
+                "protection sociale": "Sécurité sociale: maladie, vieillesse, famille, chômage • Solidarité nationale • Financement: cotisations, CSG • Défis: vieillissement population, équilibre financier",
+                "consommation": "Décision rationnelle: utilité, prix, revenu • Effets: mode, publicité, pairs • Consommation responsable: environnement, éthique • Surconsommation, obsolescence programmée",
+                "culture": "Ensemble savoirs, croyances, arts, loisirs • Transmission: éducation, médias • Diversité culturelle • Uniformisation vs préservation identités • Industries culturelles"
+            },
+            sn: {
+                "algorithmes": "Suite ordonnée d'instructions résolvant problème • Caractéristiques: finitude, déterminisme, généralité • Représentation: pseudo-code, organigramme • Complexité: temps d'exécution, mémoire",
+                "python": "Langage interprété, haut niveau • Variables: x = 5 • Conditions: if x > 0: • Boucles: for i in range(10):, while condition: • Fonctions: def nom(param): • Listes: [1, 2, 3]",
+                "données": "Structures: tableau, liste, dictionnaire • Types: int, float, str, bool • Opérations: accès, modification, recherche, tri • Persistance: fichiers (txt, csv) • Bases données: SQLite",
+                "internet": "Réseau mondial • Protocoles: TCP/IP, HTTP(S), FTP • DNS: traduit noms en adresses IP • Client (navigateur) / Serveur (site web) • Cloud: stockage distant",
+                "html css": "HTML: structure page (<h1>, <p>, <div>) • CSS: style (couleurs, position) • Balises: ouvrantes/fermantes • Attributs: id, class • Responsive design: adapté mobiles",
+                "sécurité": "Menaces: virus, phishing, ransomware • Protection: antivirus, firewall, mots de passe forts • Cryptographie: chiffrement données • RGPD: protection données personnelles",
+                "programmation": "Débogage: identifier erreurs • Modularité: fonctions réutilisables • Documentation: commentaires • Tests: vérifier fonctionnement • Versioning: Git",
+                "réseaux": "LAN: réseau local • WAN: réseau étendu • Composants: routeur, switch, modem • Wi-Fi: sans fil • Câbles: Ethernet • Topologies: étoile, bus, anneau",
+                "logiciels": "Système exploitation: Windows, Linux, macOS • Bureautique: traitement texte, tableur • Libre vs propriétaire • Open source: code accessible • Licences: GPL, Creative Commons",
+                "impacts": "Environnement: consommation énergie, déchets électroniques • Social: emplois, fracture numérique • Éthique: vie privée, biais algorithmiques • Législation: droit internet, propriété intellectuelle"
+            }
+        };
+
+        // Fonction pour envoyer un message
+        function sendMessage(subject) {
+            const input = document.getElementById(`input-${subject}`);
+            const chatMessages = document.getElementById(`chat-${subject}`);
+            const loading = document.getElementById(`loading-${subject}`);
+            const message = input.value.trim().toLowerCase();
+
+            if (!message) return;
+
+            // Message utilisateur
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.textContent = input.value;
+            chatMessages.appendChild(userMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            input.value = '';
+            loading.style.display = 'block';
+
+            // Simulation IA
+            setTimeout(() => {
+                loading.style.display = 'none';
+               
+                let response = "Consulte les chapitres ci-dessous pour plus d'informations !";
+                const subjectData = knowledgeBase[subject];
+               
+                if (subjectData) {
+                    // Chercher la meilleure correspondance
+                    let bestMatch = "";
+                    let bestScore = 0;
+                   
+                    for (const [key, answer] of Object.entries(subjectData)) {
+                        const words = key.split(" ");
+                        let score = 0;
+                       
+                        for (const word of words) {
+                            if (message.includes(word)) {
+                                score += word.length;
+                            }
+                        }
+                       
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMatch = answer;
+                        }
+                    }
+                   
+                    if (bestScore > 0) {
+                        response = bestMatch;
+                    }
+                }
+
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'message ai';
+                aiMessage.textContent = response;
+                chatMessages.appendChild(aiMessage);
+               
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1200);
+        }
+
+        // Entrée pour envoyer
+        document.querySelectorAll('.chat-input').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const subject = input.id.replace('input-', '');
+                    sendMessage(subject);
+                }
+            });
+        });
+
+        // Fonction quiz
+        function checkAnswer(questionName, correctAnswer, button) {
+            const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+           
+            if (!selected) {
+                alert('Choisis une réponse d\'abord !');
+                return;
+            }
+
+            const options = document.querySelectorAll(`input[name="${questionName}"]`);
+            options.forEach(option => {
+                const label = option.parentElement;
+                label.style.pointerEvents = 'none';
+               
+                if (option.value === correctAnswer) {
+                    label.classList.add('correct');
+                } else if (option.checked) {
+                    label.classList.add('incorrect');
+                }
+            });
+
+            button.disabled = true;
+            button.textContent = selected.value === correctAnswer ? '✅ Correct !' : '❌ Incorrect';
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Faire défiler les chats en bas
+            const subjects = ['maths', 'francais', 'physique', 'svt', 'histoire', 'anglais', 'ses', 'sn'];
+            subjects.forEach(subject => {
+                const chat = document.getElementById(`chat-${subject}`);
+                if (chat) {
+                    chat.scrollTop = chat.scrollHeight;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
